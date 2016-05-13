@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+// ref: https://github.com/lorenwest/node-config/wiki/Environment-Variables#node_config_dir
+process.env.NODE_CONFIG_DIR = __dirname + '/../config';
+
+const server = require('../app/app');
+const config = require('config');
+
+server.listen(config.get('port'), function() {
+  console.log('Express server listening on port ' + config.get('port'));
+});

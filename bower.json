@@ -1,0 +1,13 @@
+{
+  "name": "spage",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "vue": "~1.0.21",
+    "socket.io-client": "~1.4.6",
+    "moment": "~2.13.0"
+  }
+}

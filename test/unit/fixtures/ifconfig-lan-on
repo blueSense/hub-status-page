@@ -1,0 +1,6 @@
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether b8:27:eb:eb:3b:9a brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global dynamic eth0
+       valid_lft 51746sec preferred_lft 51746sec
+    inet6 fe80::ba27:ebff:feeb:3b9a/64 scope link
+       valid_lft forever preferred_lft forever

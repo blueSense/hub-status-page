@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BSN hub status page</title>
+</head>
+<body>
+<div id="system-info">
+  <h2>Network info</h2>
+  <p>
+    The device's hostname is <b>{{ systemInfo.hostname }}</b>.<br>
+    <span v-if="systemInfo.networkInfo.interfaces.lan.ip">
+      It is connected to a local area network, and has the IP {{ systemInfo.networkInfo.interfaces.lan.ip }}<br>
+    </span>
+    <span v-else>
+      It is not connected to a local area network.
+    </span>
+
+    <span v-if="systemInfo.networkInfo.interfaces.wifi.ip">
+      It is connected to a WiFi network, and has the IP {{ systemInfo.networkInfo.interfaces.wifi.ip }}<br>
+    </span>
+    <span v-else>
+      It is not connected to a WiFi network.
+    </span>
+  </p>
+
+  <h2>Application info</h2>
+  <p v-if="systemInfo.appInfo.state === 2">The application has not been installed on this device.</p>
+  <div v-else>
+    <p>
+      The application has been installed on the device, and the current version is {{ systemInfo.appInfo.version }}.<br>
+      It is currently {{ systemInfo.appInfo.state === 0 ? 'running' : 'not running' }}, and has been that way since {{ systemInfo.appInfo.state === 0 ?
+      systemInfo.appInfo.startedAt : systemInfo.appInfo.stoppedAt | formatDate }}.
+    </p>
+    <p v-if="systemInfo.updateStatus === 'updating'">The application is currently updating</p>
+    <p v-else>The last update was {{ systemInfo.updateStatus | formatDate }}</p>
+  </div>
+</div>
+
+<script type="application/javascript" src="components/vue/dist/vue.min.js"></script>
+<script type="application/javascript" src="components/socket.io-client/socket.io.js"></script>
+<script type="application/javascript" src="components/moment/min/moment.min.js"></script>
+<script type="application/javascript" src="js/app.js"></script>
+</body>
+</html>

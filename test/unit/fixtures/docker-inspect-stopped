@@ -1,0 +1,188 @@
+[
+    {
+        "Id": "ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a",
+        "Created": "2016-04-30T03:10:28.85173896Z",
+        "Path": "npm",
+        "Args": [
+            "start"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 137,
+            "Error": "",
+            "StartedAt": "2016-04-30T09:01:42.72437809Z",
+            "FinishedAt": "2016-04-30T09:12:29.104029935Z"
+        },
+        "Image": "sha256:b454016689b009d558d5add9827c214e52a3d921a6b1b1e7b9b0508c6bd4173d",
+        "ResolvConfPath": "/var/lib/docker/containers/ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a/hostname",
+        "HostsPath": "/var/lib/docker/containers/ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a/hosts",
+        "LogPath": "/var/lib/docker/containers/ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a/ee0da797fe9b501bb6ec8a6af5abd26ba75d1c102595d26552e451625eae662a-json.log",
+        "Name": "/bsn-node-hub",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/var/log:/var/log",
+                "/etc/wpa_supplicant:/etc/wpa_supplicant"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "host",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": true,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "ShmSize": 67108864,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "KernelMemory": 0,
+            "Memory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null
+        },
+        "GraphDriver": {
+            "Name": "aufs",
+            "Data": null
+        },
+        "Mounts": [
+            {
+                "Source": "/etc/wpa_supplicant",
+                "Destination": "/etc/wpa_supplicant",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Source": "/var/log",
+                "Destination": "/var/log",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "ads",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "LC_ALL=C.UTF-8",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "DEBIAN_FRONTEND=noninteractive",
+                "NPM_CONFIG_LOGLEVEL=info",
+                "NODE_VERSION=5.9.0"
+            ],
+            "Cmd": [
+                "npm",
+                "start"
+            ],
+            "Image": "bluesense/supernode:latest",
+            "Volumes": {
+                "/var/log/": {}
+            },
+            "WorkingDir": "/usr/src/app",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "io.resin.architecture": "rpi",
+                "io.resin.device-type": "raspberrypi",
+                "io.resin.qemu.version": "2.5.0-resin-rc4",
+                "version": "1.0.2"
+            },
+            "StopSignal": "SIGTERM"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "cd575b4efb0f421c211b3f745cf350bc258b0cbf6339fdd9734d4adf530f04aa",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": null,
+            "SandboxKey": "/var/run/docker/netns/default",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "host": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "7e4544f91a542ab2ac4beb79b652362b1ecd87966e78378a3902e591789a2cf1",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": ""
+                }
+            }
+        }
+    }
+]

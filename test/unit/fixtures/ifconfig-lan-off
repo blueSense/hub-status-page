@@ -1,0 +1,3 @@
+2: eth0: <NO-CARRIER,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether b8:27:eb:eb:3b:9a brd ff:ff:ff:ff:ff:ff
+
