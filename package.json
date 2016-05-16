@@ -29,6 +29,7 @@
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "mocha-teamcity-reporter": "^1.0.0",
+    "proxyquire": "^1.7.9",
     "selenium-server": "^2.52.0",
     "selenium-webdriver": "^2.52.0",
     "sinon": "^1.17.3",

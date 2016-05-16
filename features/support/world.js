@@ -7,11 +7,10 @@ var server = new SeleniumServer(require('selenium-server').path, {port: 4444});
 
 server.start();
 
-var chai = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 chai.should();
-
-// var chaiAsPromised = require('chai-as-promised');
-// chai.use(chaiAsPromised);
 
 var driver = new webdriver.Builder()
   .usingServer(server.address())
@@ -27,6 +26,7 @@ class World {
 }
 
 module.exports = function() {
+  this.setDefaultTimeout(60 * 1000);
   this.World = World;
 
   this.AfterFeatures(function() {

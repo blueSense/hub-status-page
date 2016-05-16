@@ -8,7 +8,7 @@
 <div id="system-info">
   <h2>Network info</h2>
   <p>
-    The device's hostname is <b>{{ systemInfo.hostname }}</b>.<br>
+    The device's hostname is <b id="hostname">{{ systemInfo.hostname }}</b>.<br>
     <span v-if="systemInfo.networkInfo.interfaces.lan.ip">
       It is connected to a local area network, and has the IP {{ systemInfo.networkInfo.interfaces.lan.ip }}<br>
     </span>

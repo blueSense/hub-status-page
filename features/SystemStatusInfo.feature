@@ -9,10 +9,6 @@ Feature: System status information
   - current application image
   - update status: last update and mark if any in progress
 
-  Scenario: Gather system information
-    Given I am on the status page
-    Then I should be able to see the system information
-
   Scenario: System information changes
     Given I am on the status page
     When the system information changes
