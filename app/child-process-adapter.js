@@ -1,5 +1,7 @@
 'use strict';
 
+const childProcess = require('child_process');
+
 class ChildProcessAdapter {
   constructor(childProcess) {
     this._childProcess = childProcess;
@@ -19,3 +21,8 @@ class ChildProcessAdapter {
 }
 
 module.exports = ChildProcessAdapter;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new ChildProcessAdapter(childProcess);
+};

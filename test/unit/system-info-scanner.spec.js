@@ -25,12 +25,12 @@ describe('SystemInfo', function() {
     this.applicationInfoCommandMock = this.sandbox.mock(ApplicationInfoCommand.prototype);
     this.updateInfoCommandMock = this.sandbox.mock(UpdateInfoCommand.prototype);
 
-    this.systemInfoScanner = new SystemInfoScanner(
-      this.hostnameCommandMock.object,
-      this.updateInfoCommandMock.object,
-      this.applicationInfoCommandMock.object,
-      this.networkInfoCommandMock.object
-    );
+    this.systemInfoScanner = new SystemInfoScanner({
+      hostnameCommand: this.hostnameCommandMock.object,
+      updateInfoCommand: this.updateInfoCommandMock.object,
+      applicationInfoCommand: this.applicationInfoCommandMock.object,
+      networkInfoCommand: this.networkInfoCommandMock.object
+    });
   });
 
   afterEach(function() {

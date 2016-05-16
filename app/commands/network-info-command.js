@@ -1,10 +1,14 @@
 'use strict';
 
-const Command = require('./command');
 const Interface = require('../models/interface');
 const NetworkInfo = require('../models/network-info');
+const ChildProcessAdapter = require('../child-process-adapter');
 
-class NetworkInfoCommand extends Command {
+class NetworkInfoCommand {
+  constructor(childProcessAdapter) {
+    this._childProcessAdapter = childProcessAdapter;
+  }
+
   static get commands() {
     return {
       getInterfaceInfo: iface => `ip addr show ${iface}`
@@ -34,3 +38,8 @@ class NetworkInfoCommand extends Command {
 }
 
 module.exports = NetworkInfoCommand;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new NetworkInfoCommand(ChildProcessAdapter.create());
+};

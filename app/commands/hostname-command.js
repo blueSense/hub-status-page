@@ -1,8 +1,12 @@
 'use strict';
 
-const Command = require('./command');
+const ChildProcessAdapter = require('../child-process-adapter');
 
-class HostnameCommand extends Command {
+class HostnameCommand {
+  constructor(childProcessAdapter) {
+    this._childProcessAdapter = childProcessAdapter;
+  }
+
   static get commands() {
     return {
       getHostname: () => 'hostname'
@@ -15,3 +19,8 @@ class HostnameCommand extends Command {
 }
 
 module.exports = HostnameCommand;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new HostnameCommand(ChildProcessAdapter.create());
+};

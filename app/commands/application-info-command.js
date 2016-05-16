@@ -1,9 +1,13 @@
 'use strict';
 
-const Command = require('./command');
+const ChildProcessAdapter = require('../child-process-adapter');
 const ApplicationInfo = require('../models/application-info');
 
-class ApplicationInfoCommand extends Command {
+class ApplicationInfoCommand {
+  constructor(childProcessAdapter) {
+    this._childProcessAdapter = childProcessAdapter;
+  }
+
   static get commands() {
     return {
       getImageInfo: () => 'sudo docker inspect bsn-node-hub'
@@ -32,3 +36,8 @@ class ApplicationInfoCommand extends Command {
 }
 
 module.exports = ApplicationInfoCommand;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new ApplicationInfoCommand(ChildProcessAdapter.create());
+};

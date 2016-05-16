@@ -1,8 +1,12 @@
 'use strict';
 
-const Command = require('./command');
+const ChildProcessAdapter = require('../child-process-adapter');
 
-class UpdateInfoCommand extends Command {
+class UpdateInfoCommand {
+  constructor(childProcessAdapter) {
+    this._childProcessAdapter = childProcessAdapter;
+  }
+
   static get updateLogPath() {
     return '/var/log/node-hub/update.log';
   }
@@ -23,3 +27,8 @@ class UpdateInfoCommand extends Command {
 }
 
 module.exports = UpdateInfoCommand;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new UpdateInfoCommand(ChildProcessAdapter.create());
+};

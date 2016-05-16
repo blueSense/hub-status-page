@@ -1,6 +1,6 @@
 {
   "name": "bsn-hub-status-page",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "bin": {
     "bsn-hub-status-page-daemon": "./bin/www"
@@ -10,7 +10,6 @@
     "test": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive -R spec test",
     "test:teamcity": "istanbul cover ./node_modules/.bin/_mocha -- --recursive -R mocha-teamcity-reporter test",
     "acceptance-test": "gulp acceptance-test",
-    "publish": "gulp publish",
     "postinstall": "bower install --allow-root"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 module.exports = function() {
   this.Given(/^I am on the status page$/, function(callback) {
-    var app = require('../../app/app');
+    var app = require('../../app');
     var world = this;
 
     // app.set('port', 30321);

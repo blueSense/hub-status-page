@@ -1,6 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events').EventEmitter;
+const SystemInfoScanner = require('./system-info-scanner');
 
 class SystemInfoWatcher extends EventEmitter {
   /**
@@ -43,3 +44,8 @@ class SystemInfoWatcher extends EventEmitter {
 }
 
 module.exports = SystemInfoWatcher;
+
+/* istanbul ignore next */
+module.exports.create = function() {
+  return new SystemInfoWatcher(SystemInfoScanner.create());
+};

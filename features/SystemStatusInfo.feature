@@ -3,7 +3,7 @@ Feature: System status information
   I want to be able to go to a status page for a device
   So that I can see information about the hub
 
-  The system information includes the following:
+  The system information should include the following:
   - hostname
   - network information (IP address and interfaces)
   - current application image
