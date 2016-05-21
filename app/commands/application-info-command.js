@@ -10,26 +10,45 @@ class ApplicationInfoCommand {
 
   static get commands() {
     return {
-      getImageInfo: () => 'sudo docker inspect bsn-node-hub'
+      getImageInfo: () => 'systemctl status bsn-supernode',
+      getVersion: () => 'pacman -Q bsn-supernode'
+    };
+  }
+
+  static get _regexps() {
+    return {
+      since: /since (.*?);/m,
+      version: /^bsn-supernode (.*\-\d)$/
     };
   }
 
   execute() {
     return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getImageInfo()).then(info => {
-      var parsedInfo = JSON.parse(info)[0];
-
-      var state = parsedInfo.State.Running ? ApplicationInfo.applicationState.running : ApplicationInfo.applicationState.stopped;
-      var startedAt = parsedInfo.State.StartedAt;
-      var finishedAt = parsedInfo.State.FinishedAt;
-      var image = parsedInfo.Config.Image;
-      var version = parsedInfo.Config.Labels.version;
-
-      return new ApplicationInfo(state, startedAt, finishedAt, image, version);
-    }).catch(error => {
-      if (error.message.indexOf('No such image or container') >= 0) {
-        return new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null, null);
+      return new ApplicationInfo(
+        ApplicationInfo.applicationState.running,
+        info.match(ApplicationInfoCommand._regexps.since)[1],
+        null,
+        null);
+    }).catch(stdout => {
+      if (stdout.indexOf('Loaded: not-found') >= 0) {
+        return new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null);
+      } else if (stdout.indexOf('Loaded: loaded') >= 0) {
+        return new ApplicationInfo(
+          ApplicationInfo.applicationState.stopped,
+          null,
+          stdout.match(ApplicationInfoCommand._regexps.since) ? stdout.match(ApplicationInfoCommand._regexps.since)[1] : null
+        );
       } else {
-        throw error;
+        throw new Error(stdout);
+      }
+    }).then(appInfo => {
+      if (appInfo.state === ApplicationInfo.applicationState.running || appInfo.state === ApplicationInfo.applicationState.stopped) {
+        return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getVersion()).then(version => {
+          appInfo.version = version.trim().match(ApplicationInfoCommand._regexps.version)[1];
+          return appInfo;
+        });
+      } else {
+        return appInfo;
       }
     });
   }

@@ -25,12 +25,12 @@ describe('ApplicationInfoCommand', function() {
   describe('#execute()', function() {
     context('application not installed', function() {
       it('should return the info indicating that the application was not installed', function() {
-        var expectedInfo = new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null, null);
+        var expectedInfo = new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null);
 
         this.childProcessAdapterMock.expects('exec')
           .once()
           .withArgs(ApplicationInfoCommand.commands.getImageInfo())
-          .returns(Promise.reject(new Error('Command failed: sudo docker inspect bsn-node-hub\nError: No such image or container: bsn-node-hub')));
+          .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-installed', {encoding: 'utf8'})));
 
         return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
           info.should.deep.equal(expectedInfo);
@@ -44,16 +44,44 @@ describe('ApplicationInfoCommand', function() {
         it('should return the image info', function() {
           var expectedInfo = new ApplicationInfo(
             ApplicationInfo.applicationState.stopped,
-            '2016-04-30T09:01:42.72437809Z',
-            '2016-04-30T09:12:29.104029935Z',
-            'bluesense/supernode:latest',
-            '1.0.2'
+            null,
+            'Sat 2016-05-21 14:52:50 UTC',
+            '1.0.3-4'
           );
 
           this.childProcessAdapterMock.expects('exec')
             .once()
             .withArgs(ApplicationInfoCommand.commands.getImageInfo())
-            .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/docker-inspect-stopped', {encoding: 'utf8'})));
+            .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running', {encoding: 'utf8'})));
+
+          this.childProcessAdapterMock.expects('exec')
+            .once()
+            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
+
+          return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
+            info.should.deep.equal(expectedInfo);
+            this.childProcessAdapterMock.verify();
+          });
+        });
+
+        it('should handle the case where the application was never started by returning null for finishedAt', function() {
+          var expectedInfo = new ApplicationInfo(
+            ApplicationInfo.applicationState.stopped,
+            null,
+            null,
+            '1.0.3-4'
+          );
+
+          this.childProcessAdapterMock.expects('exec')
+            .once()
+            .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+            .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running-never-ran', {encoding: 'utf8'})));
+
+          this.childProcessAdapterMock.expects('exec')
+            .once()
+            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
 
           return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
             info.should.deep.equal(expectedInfo);
@@ -66,16 +94,20 @@ describe('ApplicationInfoCommand', function() {
         it('should return the image info', function() {
           var expectedInfo = new ApplicationInfo(
             ApplicationInfo.applicationState.running,
-            '2016-04-30T09:01:42.72437809Z',
-            '2016-04-30T09:12:29.104029935Z',
-            'bluesense/supernode:latest',
-            '1.0.2'
+            'Sat 2016-05-21 13:10:22 UTC',
+            null,
+            '1.0.3-4'
           );
 
           this.childProcessAdapterMock.expects('exec')
             .once()
             .withArgs(ApplicationInfoCommand.commands.getImageInfo())
-            .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/docker-inspect-running', {encoding: 'utf8'})));
+            .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/supernode-running', {encoding: 'utf8'})));
+
+          this.childProcessAdapterMock.expects('exec')
+            .once()
+            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
 
           return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
             info.should.deep.equal(expectedInfo);
@@ -87,15 +119,15 @@ describe('ApplicationInfoCommand', function() {
 
     context('command throws an error other than expected one', function() {
       it('should propagate that error', function() {
-        var error = new Error('Some random error');
+        var error = 'Some random error';
 
         this.childProcessAdapterMock.expects('exec')
           .once()
           .withArgs(ApplicationInfoCommand.commands.getImageInfo())
           .returns(Promise.reject(error));
 
-        return this.applicationInfoCommand.execute().should.be.rejected.then(error => {
-          error.should.equal(error);
+        return this.applicationInfoCommand.execute().should.be.rejected.then(thrownError => {
+          thrownError.should.deep.equal(new Error(error));
           this.childProcessAdapterMock.verify();
         });
       });

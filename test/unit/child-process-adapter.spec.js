@@ -45,14 +45,15 @@ describe('ChildProcessAdapter', function() {
 
     it('should return a promise which is rejected when the callback is fired with an error', function() {
       var error = 'The directory does not exist';
+      var stdout = 'Some output';
 
       this.childProcessMock.expects('exec')
         .once()
         .withArgs(this.command, this.options)
-        .yields(error, undefined);
+        .yields(error, stdout);
 
-      return this.childProcessAdapter.exec(this.command, this.options).should.eventually.be.rejected.then(stderr => {
-        stderr.should.equal(error);
+      return this.childProcessAdapter.exec(this.command, this.options).should.eventually.be.rejected.then(thrownStdout => {
+        thrownStdout.should.equal(stdout);
         this.childProcessMock.verify();
       });
     });

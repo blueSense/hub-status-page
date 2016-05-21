@@ -11,7 +11,7 @@ class ChildProcessAdapter {
     return new Promise((resolve, reject) => {
       this._childProcess.exec(command, options, (error, stdout) => {
         if (error) {
-          reject(error);
+          reject(stdout);
         } else {
           resolve(stdout);
         }

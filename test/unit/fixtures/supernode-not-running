@@ -1,0 +1,4 @@
+* bsn-supernode.service - BSN hub
+   Loaded: loaded (/usr/lib/systemd/system/bsn-supernode.service; enabled; vendor preset: disabled)
+   Active: inactive (dead) since Sat 2016-05-21 14:52:50 UTC; 1s ago
+ Main PID: 28229 (code=killed, signal=TERM)

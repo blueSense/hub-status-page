@@ -1,0 +1,13 @@
+* bsn-supernode.service - BSN hub
+   Loaded: loaded (/usr/lib/systemd/system/bsn-supernode.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2016-05-21 13:10:22 UTC; 1h 40min ago
+ Main PID: 28229 (node)
+   CGroup: /system.slice/bsn-supernode.service
+           |- 9861 sudo iwlist wlan0 scan
+           |- 9862 iwlist wlan0 scan
+           |-28229 node /usr/bin/node-hub
+           |-28237 npm
+           |-28247 node /usr/lib/node_modules/node-hub/node_modules/.bin/pm2 start --no-daemon processes.json
+           |-28266 node /usr/lib/node_modules/node-hub/app.js
+           |-28276 node /usr/lib/node_modules/node-hub/app.js
+           `-28286 node /usr/lib/node_modules/node-hub/app.js
