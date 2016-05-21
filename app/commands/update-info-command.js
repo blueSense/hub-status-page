@@ -14,7 +14,7 @@ class UpdateInfoCommand {
   static get commands() {
     return {
       getUpdateProcess: () => 'ps aux | grep pacman -S --needed --noconfirm bsn-supernode | grep -v grep || true',
-      getLastUpdateTime: () => `tac ${UpdateInfoCommand.updateLogPath} | grep -m1 \'Fetching\' | sed -E "s/(.*)Syncing package: bsn-supernode.*/\\1/"`
+      getLastUpdateTime: () => `tac ${UpdateInfoCommand.updateLogPath} | grep -m1 'Syncing package: bsn-supernode' | sed -E "s/(.*)Syncing.*/\\1/"`
     };
   }
 
