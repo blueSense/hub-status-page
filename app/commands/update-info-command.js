@@ -8,13 +8,13 @@ class UpdateInfoCommand {
   }
 
   static get updateLogPath() {
-    return '/var/log/node-hub/update.log';
+    return '/var/log/node-hub/daemon.log';
   }
 
   static get commands() {
     return {
-      getUpdateProcess: () => 'ps aux | grep bsn-update | grep -v grep || true',
-      getLastUpdateTime: () => `tac ${UpdateInfoCommand.updateLogPath} | grep -m1 \'Fetching\' | sed -E "s/(.*)Fetching.*/\\1/"`
+      getUpdateProcess: () => 'ps aux | grep pacman -S --needed --noconfirm bsn-supernode | grep -v grep || true',
+      getLastUpdateTime: () => `tac ${UpdateInfoCommand.updateLogPath} | grep -m1 \'Fetching\' | sed -E "s/(.*)Syncing package: bsn-supernode.*/\\1/"`
     };
   }
 

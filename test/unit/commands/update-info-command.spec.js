@@ -41,7 +41,7 @@ describe('UpdateInfoCommand', function() {
         this.childProcessAdapterMock.expects('exec')
           .once()
           .withArgs(UpdateInfoCommand.commands.getUpdateProcess())
-          .returns(Promise.resolve('bsn      21057 36.0  0.9  11416  8560 pts/0    T    23:39   0:00 /usr/bin/python2 /usr/bin/bsn-update'));
+          .returns(Promise.resolve('bsn      21057 36.0  0.9  11416  8560 pts/0    T    23:39   0:00 /usr/bin/pacman -S --needed --noconfirm bsn-supernode'));
 
         return this.updateInfoCommand.execute().should.be.fulfilled.then(updateStatus => {
           updateStatus.should.equal('updating');
