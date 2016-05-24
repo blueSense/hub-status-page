@@ -37,7 +37,7 @@ describe('ChildProcessAdapter', function() {
         .withArgs(this.command, this.options)
         .yields(undefined, output);
 
-      return this.childProcessAdapter.exec(this.command, this.options).should.eventually.be.fulfilled.then(stdout => {
+      return this.childProcessAdapter.exec(this.command, this.options).should.be.fulfilled.then(stdout => {
         stdout.should.equal(output);
         this.childProcessMock.verify();
       });
@@ -52,7 +52,7 @@ describe('ChildProcessAdapter', function() {
         .withArgs(this.command, this.options)
         .yields(error, stdout);
 
-      return this.childProcessAdapter.exec(this.command, this.options).should.eventually.be.rejected.then(thrownStdout => {
+      return this.childProcessAdapter.exec(this.command, this.options).should.be.rejected.then(thrownStdout => {
         thrownStdout.should.equal(stdout);
         this.childProcessMock.verify();
       });

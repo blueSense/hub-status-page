@@ -31,7 +31,7 @@ describe('HostnameCommand', function() {
         .withArgs(HostnameCommand.commands.getHostname())
         .returns(Promise.resolve(`${this.hostname}\n`));
 
-      return this.hostnameCommand.execute().should.eventually.be.fulfilled.then(output => {
+      return this.hostnameCommand.execute().should.be.fulfilled.then(output => {
         output.should.equal(this.hostname);
         this.childProcessAdapterMock.verify();
       });
