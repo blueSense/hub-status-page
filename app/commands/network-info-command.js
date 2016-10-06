@@ -22,17 +22,42 @@ class NetworkInfoCommand {
   }
 
   execute() {
-    return Promise.all([
-      this._childProcessAdapter.exec(NetworkInfoCommand.commands.getInterfaceInfo('eth0')),
-      this._childProcessAdapter.exec(NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
-    ]).then(results => {
-      var lanIp = results[0].match(NetworkInfoCommand._regexps.ifconfigIp);
-      var wifiIp = results[1].match(NetworkInfoCommand._regexps.ifconfigIp);
+    const interfaces = {
+      eth0: 'LAN',
+      wlan0: 'WiFi'
+    };
 
-      return new NetworkInfo({
-        lan: new Interface('LAN', lanIp ? lanIp[1] : null),
-        wifi: new Interface('WiFi', wifiIp ? wifiIp[1] : null)
-      });
+    const scanInterfaces = Object.keys(interfaces)
+      .reduce((prev, current) => {
+        const command = NetworkInfoCommand.commands.getInterfaceInfo(current);
+        return prev.then(result => this._childProcessAdapter.exec(command)
+          .then(info => {
+            result[current] = info;
+            return result;
+          })
+          .catch(error => {
+            if (error !== `Device "${current}" does not exist.`) {
+              throw error;
+            }
+
+            return result;
+          }));
+      }, Promise.resolve({}));
+
+    return scanInterfaces.then(results => {
+      const interfaces = {};
+
+      const lanIp = results.eth0.match(NetworkInfoCommand._regexps.ifconfigIp);
+      interfaces.lan = new Interface('LAN', lanIp ? lanIp[1] : null);
+
+      if (results.wlan0) {
+        const wifiIp = results.wlan0.match(NetworkInfoCommand._regexps.ifconfigIp);
+        interfaces.wifi = new Interface('WiFi', wifiIp ? wifiIp[1] : null);
+      } else {
+        interfaces.wifi = new Interface('WiFi', null);
+      }
+
+      return new NetworkInfo(interfaces);
     });
   }
 }
@@ -40,6 +65,6 @@ class NetworkInfoCommand {
 module.exports = NetworkInfoCommand;
 
 /* istanbul ignore next */
-module.exports.create = function() {
+module.exports.create = function () {
   return new NetworkInfoCommand(ChildProcessAdapter.create());
 };

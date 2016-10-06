@@ -48,6 +48,28 @@ describe('NetworkInfoCommand', function() {
       });
     });
 
+    context('no wifi interface', function () {
+      it('should indicate that the wifi is not connected', function() {
+        var expectedNetworkInfo = new NetworkInfo({
+          lan: new Interface('LAN', '192.168.1.100'),
+          wifi: new Interface('WiFi', null)
+        });
+
+        this.childProcessAdapterMock.expects('exec')
+          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
+          .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-lan-on', {encoding: 'utf8'})));
+
+        this.childProcessAdapterMock.expects('exec')
+          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
+          .returns(Promise.reject('Device "wlan0" does not exist.'));
+
+        return this.networkInfoCommand.execute().should.be.fulfilled.then(networkInfo => {
+          networkInfo.should.deep.equal(expectedNetworkInfo);
+          this.childProcessAdapterMock.verify();
+        });
+      });
+    });
+
     context('only wifi running', function() {
       it('should indicate that the lan interface is not connected', function() {
         var expectedNetworkInfo = new NetworkInfo({
