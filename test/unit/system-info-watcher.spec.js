@@ -4,7 +4,6 @@ const SystemInfo = require('../../app/models/system-info');
 const NetworkInfo = require('../../app/models/network-info');
 const Interface = require('../../app/models/interface');
 const SystemInfoScanner = require('../../app/system-info-scanner');
-const SystemInfoWatcher = require('../../app/system-info-watcher');
 
 describe('SystemInfoWatcher', function() {
   beforeEach(function() {
@@ -12,7 +11,13 @@ describe('SystemInfoWatcher', function() {
 
     this.systemInfoScannerMock = this.sandbox.mock(SystemInfoScanner.prototype);
 
-    this.systemInfoWatcher = new SystemInfoWatcher(this.systemInfoScannerMock.object);
+    this.SystemInfoWatcher = this.proxyquire('../../app/system-info-watcher', {
+      './system-info-scanner': {
+        create: () => this.systemInfoScannerMock.object
+      }
+    });
+
+    this.systemInfoWatcher = new this.SystemInfoWatcher(this.systemInfoScannerMock.object);
   });
 
   describe('#startMonitoring()', function() {
@@ -67,7 +72,7 @@ describe('SystemInfoWatcher', function() {
         .onThirdCall()
         .returns(Promise.resolve(stateAfterChange));
 
-      this.systemInfoWatcher.on(SystemInfoWatcher.events.change, spy);
+      this.systemInfoWatcher.on(this.SystemInfoWatcher.events.change, spy);
       this.systemInfoWatcher.startMonitoring();
       this.sandbox.clock.tick(this.systemInfoWatcher.updateInterval * 2);
       this.sandbox.clock.restore();

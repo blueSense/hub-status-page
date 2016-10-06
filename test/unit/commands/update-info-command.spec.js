@@ -1,7 +1,6 @@
 require('../../support/bootstrap');
 
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
-const UpdateInfoCommand = require('../../../app/commands/update-info-command');
 
 describe('UpdateInfoCommand', function() {
   before(function() {
@@ -10,7 +9,14 @@ describe('UpdateInfoCommand', function() {
 
   beforeEach(function() {
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
-    this.updateInfoCommand = new UpdateInfoCommand(this.childProcessAdapterMock.object);
+
+    this.UpdateInfoCommand = this.proxyquire('../../app/commands/update-info-command', {
+      '../child-process-adapter': {
+        create: () => this.childProcessAdapterMock.object
+      }
+    });
+
+    this.updateInfoCommand = new this.UpdateInfoCommand(this.childProcessAdapterMock.object);
   });
 
   describe('#execute()', function() {
@@ -21,7 +27,7 @@ describe('UpdateInfoCommand', function() {
     beforeEach(function() {
       this.childProcessAdapterMock.expects('exec')
         .once()
-        .withArgs(UpdateInfoCommand.commands.getLastUpdateTime())
+        .withArgs(this.UpdateInfoCommand.commands.getLastUpdateTime())
         .returns(Promise.resolve(`${this.lastUpdateTime}\n`));
     });
 
@@ -29,7 +35,7 @@ describe('UpdateInfoCommand', function() {
       it('should set the update status to "updating"', function() {
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(UpdateInfoCommand.commands.getUpdateProcess())
+          .withArgs(this.UpdateInfoCommand.commands.getUpdateProcess())
           .returns(Promise.resolve('bsn      21057 36.0  0.9  11416  8560 pts/0    T    23:39   0:00 /usr/bin/pacman -S --needed --noconfirm bsn-supernode'));
 
         return this.updateInfoCommand.execute().should.be.fulfilled.then(updateStatus => {
@@ -43,7 +49,7 @@ describe('UpdateInfoCommand', function() {
       it('should set the update status to the date of the last update as seen in the log files', function() {
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(UpdateInfoCommand.commands.getUpdateProcess())
+          .withArgs(this.UpdateInfoCommand.commands.getUpdateProcess())
           .returns(Promise.resolve(''));
 
         return this.updateInfoCommand.execute().should.be.fulfilled.then(updateStatus => {

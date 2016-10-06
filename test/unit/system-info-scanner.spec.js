@@ -2,7 +2,6 @@ require('../support/bootstrap');
 
 const NetworkInfo = require('../../app/models/network-info');
 const Interface = require('../../app/models/interface');
-const SystemInfoScanner = require('../../app/system-info-scanner');
 const ApplicationInfo = require('../../app/models/application-info');
 const HostnameCommand = require('../../app/commands/hostname-command');
 const NetworkInfoCommand = require('../../app/commands/network-info-command');
@@ -18,12 +17,22 @@ describe('SystemInfo', function() {
     this.applicationInfoCommandMock = this.sandbox.mock(ApplicationInfoCommand.prototype);
     this.updateInfoCommandMock = this.sandbox.mock(UpdateInfoCommand.prototype);
 
-    this.systemInfoScanner = new SystemInfoScanner({
-      hostnameCommand: this.hostnameCommandMock.object,
-      updateInfoCommand: this.updateInfoCommandMock.object,
-      applicationInfoCommand: this.applicationInfoCommandMock.object,
-      networkInfoCommand: this.networkInfoCommandMock.object
+    this.SystemInfoScanner = this.proxyquire('../../app/system-info-scanner', {
+      './commands/hostname-command': {
+        create: () => this.hostnameCommandMock.object
+      },
+      './commands/network-info-command': {
+        create: () => this.networkInfoCommandMock.object
+      },
+      './commands/application-info-command': {
+        create: () => this.applicationInfoCommandMock.object
+      },
+      './commands/update-info-command': {
+        create: () => this.updateInfoCommandMock.object
+      }
     });
+
+    this.systemInfoScanner = new this.SystemInfoScanner();
   });
 
   describe('#execute()', function() {

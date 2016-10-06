@@ -8,8 +8,17 @@ const ApplicationInfoCommand = require('./commands/application-info-command');
 const NetworkInfoCommand = require('./commands/network-info-command');
 
 class SystemInfoScanner {
-  constructor(commands) {
-    this._commands = commands;
+  constructor() {
+    this._commands = {
+      hostnameCommand: HostnameCommand.create(),
+      updateInfoCommand: UpdateInfoCommand.create(),
+      applicationInfoCommand: ApplicationInfoCommand.create(),
+      networkInfoCommand: NetworkInfoCommand.create()
+    };
+  }
+
+  static create() {
+    return new SystemInfoScanner();
   }
 
   /**
@@ -26,13 +35,3 @@ class SystemInfoScanner {
 }
 
 module.exports = SystemInfoScanner;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new SystemInfoScanner({
-    hostnameCommand: HostnameCommand.create(),
-    updateInfoCommand: UpdateInfoCommand.create(),
-    applicationInfoCommand: ApplicationInfoCommand.create(),
-    networkInfoCommand: NetworkInfoCommand.create()
-  });
-};

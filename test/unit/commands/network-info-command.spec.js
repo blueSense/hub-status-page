@@ -1,7 +1,6 @@
 require('../../support/bootstrap');
 
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
-const NetworkInfoCommand = require('../../../app/commands/network-info-command');
 const NetworkInfo = require('../../../app/models/network-info');
 const Interface = require('../../../app/models/interface');
 const fs = require('fs');
@@ -9,7 +8,14 @@ const fs = require('fs');
 describe('NetworkInfoCommand', function() {
   beforeEach(function() {
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
-    this.networkInfoCommand = new NetworkInfoCommand(this.childProcessAdapterMock.object);
+
+    this.NetworkInfoCommand = this.proxyquire('../../app/commands/network-info-command', {
+      '../child-process-adapter': {
+        create: () => this.childProcessAdapterMock.object
+      }
+    });
+
+    this.networkInfoCommand = new this.NetworkInfoCommand();
   });
 
   describe('#execute()', function() {
@@ -22,12 +28,12 @@ describe('NetworkInfoCommand', function() {
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
           .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-lan-on', {encoding: 'utf8'})));
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
           .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-wifi-off', {encoding: 'utf8'})));
 
         return this.networkInfoCommand.execute().should.be.fulfilled.then(networkInfo => {
@@ -45,11 +51,11 @@ describe('NetworkInfoCommand', function() {
         });
 
         this.childProcessAdapterMock.expects('exec')
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
           .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-lan-on', {encoding: 'utf8'})));
 
         this.childProcessAdapterMock.expects('exec')
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
           .returns(Promise.reject('Device "wlan0" does not exist.'));
 
         return this.networkInfoCommand.execute().should.be.fulfilled.then(networkInfo => {
@@ -68,12 +74,12 @@ describe('NetworkInfoCommand', function() {
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('eth0'))
           .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-lan-off', {encoding: 'utf8'})));
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
+          .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
           .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/ifconfig-wifi-on', {encoding: 'utf8'})));
 
         return this.networkInfoCommand.execute().should.be.fulfilled.then(networkInfo => {

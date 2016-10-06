@@ -1,14 +1,20 @@
 require('../../support/bootstrap');
 
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
-const ApplicationInfoCommand = require('../../../app/commands/application-info-command');
 const ApplicationInfo = require('../../../app/models/application-info');
 const fs = require('fs');
 
 describe('ApplicationInfoCommand', function() {
   beforeEach(function() {
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
-    this.applicationInfoCommand = new ApplicationInfoCommand(this.childProcessAdapterMock.object);
+
+    this.ApplicationInfoCommand = this.proxyquire('../../app/commands/application-info-command', {
+      '../child-process-adapter': {
+        create: () => this.childProcessAdapterMock.object
+      }
+    });
+
+    this.applicationInfoCommand = new this.ApplicationInfoCommand();
   });
 
   describe('#execute()', function() {
@@ -18,7 +24,7 @@ describe('ApplicationInfoCommand', function() {
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+          .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
           .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-installed', {encoding: 'utf8'})));
 
         return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
@@ -40,12 +46,12 @@ describe('ApplicationInfoCommand', function() {
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+            .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
             .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running', {encoding: 'utf8'})));
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .withArgs(this.ApplicationInfoCommand.commands.getVersion())
             .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
 
           return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
@@ -64,12 +70,12 @@ describe('ApplicationInfoCommand', function() {
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+            .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
             .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running-never-ran', {encoding: 'utf8'})));
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .withArgs(this.ApplicationInfoCommand.commands.getVersion())
             .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
 
           return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
@@ -90,12 +96,12 @@ describe('ApplicationInfoCommand', function() {
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+            .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
             .returns(Promise.resolve(fs.readFileSync('test/unit/fixtures/supernode-running', {encoding: 'utf8'})));
 
           this.childProcessAdapterMock.expects('exec')
             .once()
-            .withArgs(ApplicationInfoCommand.commands.getVersion())
+            .withArgs(this.ApplicationInfoCommand.commands.getVersion())
             .returns(Promise.resolve('bsn-supernode 1.0.3-4\n'));
 
           return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
@@ -112,7 +118,7 @@ describe('ApplicationInfoCommand', function() {
 
         this.childProcessAdapterMock.expects('exec')
           .once()
-          .withArgs(ApplicationInfoCommand.commands.getImageInfo())
+          .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
           .returns(Promise.reject(error));
 
         return this.applicationInfoCommand.execute().should.be.rejected.then(thrownError => {

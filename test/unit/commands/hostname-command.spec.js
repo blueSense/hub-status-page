@@ -1,7 +1,6 @@
 require('../../support/bootstrap');
 
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
-const HostnameCommand = require('../../../app/commands/hostname-command');
 
 describe('HostnameCommand', function() {
   before(function() {
@@ -10,14 +9,21 @@ describe('HostnameCommand', function() {
 
   beforeEach(function() {
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
-    this.hostnameCommand = new HostnameCommand(this.childProcessAdapterMock.object);
+
+    this.HostnameCommand = this.proxyquire('../../app/commands/hostname-command', {
+      '../child-process-adapter': {
+        create: () => this.childProcessAdapterMock.object
+      }
+    });
+
+    this.hostnameCommand = new this.HostnameCommand();
   });
 
   describe('#execute()', function() {
     it('should return a promise that resolves with a hostname', function() {
       this.childProcessAdapterMock.expects('exec')
         .once()
-        .withArgs(HostnameCommand.commands.getHostname())
+        .withArgs(this.HostnameCommand.commands.getHostname())
         .returns(Promise.resolve(`${this.hostname}\n`));
 
       return this.hostnameCommand.execute().should.be.fulfilled.then(output => {

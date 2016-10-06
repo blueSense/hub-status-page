@@ -7,12 +7,16 @@ class SystemInfoWatcher extends EventEmitter {
   /**
    * @param systemInfoScanner
    */
-  constructor(systemInfoScanner) {
+  constructor() {
     super();
 
-    this._systemInfoScanner = systemInfoScanner;
+    this._systemInfoScanner = SystemInfoScanner.create();
 
     this.updateInterval = 10000;
+  }
+
+  static create() {
+    return new SystemInfoWatcher();
   }
 
   static get events() {
@@ -44,8 +48,3 @@ class SystemInfoWatcher extends EventEmitter {
 }
 
 module.exports = SystemInfoWatcher;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new SystemInfoWatcher(SystemInfoScanner.create());
-};

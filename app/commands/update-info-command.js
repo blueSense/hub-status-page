@@ -3,8 +3,12 @@
 const ChildProcessAdapter = require('../child-process-adapter');
 
 class UpdateInfoCommand {
-  constructor(childProcessAdapter) {
-    this._childProcessAdapter = childProcessAdapter;
+  constructor() {
+    this._childProcessAdapter = ChildProcessAdapter.create();
+  }
+
+  static create() {
+    return new UpdateInfoCommand();
   }
 
   static get updateLogPath() {
@@ -27,8 +31,3 @@ class UpdateInfoCommand {
 }
 
 module.exports = UpdateInfoCommand;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new UpdateInfoCommand(ChildProcessAdapter.create());
-};

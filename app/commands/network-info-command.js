@@ -5,8 +5,12 @@ const NetworkInfo = require('../models/network-info');
 const ChildProcessAdapter = require('../child-process-adapter');
 
 class NetworkInfoCommand {
-  constructor(childProcessAdapter) {
-    this._childProcessAdapter = childProcessAdapter;
+  constructor() {
+    this._childProcessAdapter = ChildProcessAdapter.create();
+  }
+
+  static create() {
+    return new NetworkInfoCommand();
   }
 
   static get commands() {
@@ -63,8 +67,3 @@ class NetworkInfoCommand {
 }
 
 module.exports = NetworkInfoCommand;
-
-/* istanbul ignore next */
-module.exports.create = function () {
-  return new NetworkInfoCommand(ChildProcessAdapter.create());
-};

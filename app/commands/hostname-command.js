@@ -3,8 +3,12 @@
 const ChildProcessAdapter = require('../child-process-adapter');
 
 class HostnameCommand {
-  constructor(childProcessAdapter) {
-    this._childProcessAdapter = childProcessAdapter;
+  constructor() {
+    this._childProcessAdapter = ChildProcessAdapter.create();
+  }
+
+  static create() {
+    return new HostnameCommand();
   }
 
   static get commands() {
@@ -19,8 +23,3 @@ class HostnameCommand {
 }
 
 module.exports = HostnameCommand;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new HostnameCommand(ChildProcessAdapter.create());
-};

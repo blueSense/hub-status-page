@@ -4,8 +4,12 @@ const ChildProcessAdapter = require('../child-process-adapter');
 const ApplicationInfo = require('../models/application-info');
 
 class ApplicationInfoCommand {
-  constructor(childProcessAdapter) {
-    this._childProcessAdapter = childProcessAdapter;
+  constructor() {
+    this._childProcessAdapter = ChildProcessAdapter.create();
+  }
+
+  static create() {
+    return new ApplicationInfoCommand();
   }
 
   static get commands() {
@@ -55,8 +59,3 @@ class ApplicationInfoCommand {
 }
 
 module.exports = ApplicationInfoCommand;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new ApplicationInfoCommand(ChildProcessAdapter.create());
-};
