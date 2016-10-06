@@ -1,25 +1,14 @@
+require('../../support/bootstrap');
+
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
 const ApplicationInfoCommand = require('../../../app/commands/application-info-command');
 const ApplicationInfo = require('../../../app/models/application-info');
 const fs = require('fs');
 
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinonChai = require('sinon-chai');
-chai.should();
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
-
 describe('ApplicationInfoCommand', function() {
   beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
     this.applicationInfoCommand = new ApplicationInfoCommand(this.childProcessAdapterMock.object);
-  });
-
-  afterEach(function() {
-    this.sandbox.restore();
   });
 
   describe('#execute()', function() {

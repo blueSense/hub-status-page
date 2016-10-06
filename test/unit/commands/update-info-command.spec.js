@@ -1,13 +1,7 @@
+require('../../support/bootstrap');
+
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
 const UpdateInfoCommand = require('../../../app/commands/update-info-command');
-
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinonChai = require('sinon-chai');
-chai.should();
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
 
 describe('UpdateInfoCommand', function() {
   before(function() {
@@ -15,13 +9,8 @@ describe('UpdateInfoCommand', function() {
   });
 
   beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
     this.updateInfoCommand = new UpdateInfoCommand(this.childProcessAdapterMock.object);
-  });
-
-  afterEach(function() {
-    this.sandbox.restore();
   });
 
   describe('#execute()', function() {

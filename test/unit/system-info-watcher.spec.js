@@ -1,29 +1,18 @@
+require('../support/bootstrap');
+
 const SystemInfo = require('../../app/models/system-info');
 const NetworkInfo = require('../../app/models/network-info');
 const Interface = require('../../app/models/interface');
 const SystemInfoScanner = require('../../app/system-info-scanner');
 const SystemInfoWatcher = require('../../app/system-info-watcher');
 
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinonChai = require('sinon-chai');
-chai.should();
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
-
 describe('SystemInfoWatcher', function() {
   beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
     this.sandbox.useFakeTimers();
 
     this.systemInfoScannerMock = this.sandbox.mock(SystemInfoScanner.prototype);
 
     this.systemInfoWatcher = new SystemInfoWatcher(this.systemInfoScannerMock.object);
-  });
-
-  afterEach(function() {
-    this.sandbox.restore();
   });
 
   describe('#startMonitoring()', function() {

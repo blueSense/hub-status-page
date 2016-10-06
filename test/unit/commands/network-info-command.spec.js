@@ -1,26 +1,15 @@
+require('../../support/bootstrap');
+
 const ChildProcessAdapter = require('../../../app/child-process-adapter');
 const NetworkInfoCommand = require('../../../app/commands/network-info-command');
 const NetworkInfo = require('../../../app/models/network-info');
 const Interface = require('../../../app/models/interface');
 const fs = require('fs');
 
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinonChai = require('sinon-chai');
-chai.should();
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
-
 describe('NetworkInfoCommand', function() {
   beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
     this.childProcessAdapterMock = this.sandbox.mock(ChildProcessAdapter.prototype);
     this.networkInfoCommand = new NetworkInfoCommand(this.childProcessAdapterMock.object);
-  });
-
-  afterEach(function() {
-    this.sandbox.restore();
   });
 
   describe('#execute()', function() {

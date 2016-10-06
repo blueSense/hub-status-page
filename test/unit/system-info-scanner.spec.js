@@ -1,3 +1,5 @@
+require('../support/bootstrap');
+
 const NetworkInfo = require('../../app/models/network-info');
 const Interface = require('../../app/models/interface');
 const SystemInfoScanner = require('../../app/system-info-scanner');
@@ -7,17 +9,8 @@ const NetworkInfoCommand = require('../../app/commands/network-info-command');
 const ApplicationInfoCommand = require('../../app/commands/application-info-command');
 const UpdateInfoCommand = require('../../app/commands/update-info-command');
 
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinonChai = require('sinon-chai');
-chai.should();
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
-
 describe('SystemInfo', function() {
   beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
     this.sandbox.useFakeTimers();
 
     this.hostnameCommandMock = this.sandbox.mock(HostnameCommand.prototype);
@@ -31,10 +24,6 @@ describe('SystemInfo', function() {
       applicationInfoCommand: this.applicationInfoCommandMock.object,
       networkInfoCommand: this.networkInfoCommandMock.object
     });
-  });
-
-  afterEach(function() {
-    this.sandbox.restore();
   });
 
   describe('#execute()', function() {
