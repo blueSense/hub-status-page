@@ -3,15 +3,19 @@
 const childProcess = require('child_process');
 
 class ChildProcessAdapter {
-  constructor(childProcess) {
+  constructor() {
     this._childProcess = childProcess;
+  }
+
+  static create() {
+    return new ChildProcessAdapter();
   }
 
   exec(command, options) {
     return new Promise((resolve, reject) => {
       this._childProcess.exec(command, options, (error, stdout) => {
         if (error) {
-          reject(stdout);
+          reject(error);
         } else {
           resolve(stdout);
         }
@@ -21,8 +25,3 @@ class ChildProcessAdapter {
 }
 
 module.exports = ChildProcessAdapter;
-
-/* istanbul ignore next */
-module.exports.create = function() {
-  return new ChildProcessAdapter(childProcess);
-};
