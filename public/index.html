@@ -33,7 +33,10 @@
       systemInfo.appInfo.startedAt : systemInfo.appInfo.stoppedAt | formatDate }}.
     </p>
     <p v-if="systemInfo.updateStatus === 'updating'">The application is currently updating</p>
-    <p v-else>The last update was {{ systemInfo.updateStatus | formatDate }}</p>
+    <div v-else>
+      <p v-if="systemInfo.updateStatus === ''">No updates occurred</p>
+      <p v-else>The last update was {{ systemInfo.updateStatus | formatDate }}</p>
+    </div>
   </div>
 </div>
 
