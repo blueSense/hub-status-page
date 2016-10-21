@@ -27,34 +27,37 @@ class ApplicationInfoCommand {
   }
 
   execute() {
-    return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getImageInfo()).then(info => {
-      return new ApplicationInfo(
-        ApplicationInfo.applicationState.running,
-        info.match(ApplicationInfoCommand._regexps.since)[1],
-        null,
-        null);
-    }).catch(error => {
-      if (error.message.indexOf('Loaded: not-found') >= 0) {
-        return new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null);
-      } else if (error.message.indexOf('Loaded: loaded') >= 0) {
+    return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getImageInfo())
+      .then(info => {
         return new ApplicationInfo(
-          ApplicationInfo.applicationState.stopped,
+          ApplicationInfo.applicationState.running,
+          info.match(ApplicationInfoCommand._regexps.since)[1],
           null,
-          error.message.match(ApplicationInfoCommand._regexps.since) ? error.message.match(ApplicationInfoCommand._regexps.since)[1] : null
-        );
-      } else {
-        throw error;
-      }
-    }).then(appInfo => {
-      if (appInfo.state === ApplicationInfo.applicationState.running || appInfo.state === ApplicationInfo.applicationState.stopped) {
-        return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getVersion()).then(version => {
-          appInfo.version = version.trim().match(ApplicationInfoCommand._regexps.version)[1];
+          null);
+      })
+      .catch(error => {
+        if (error.message.indexOf('Loaded: not-found') >= 0) {
+          return new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null);
+        } else if (error.message.indexOf('Loaded: loaded') >= 0) {
+          return new ApplicationInfo(
+            ApplicationInfo.applicationState.stopped,
+            null,
+            error.message.match(ApplicationInfoCommand._regexps.since) ? error.message.match(ApplicationInfoCommand._regexps.since)[1] : null
+          );
+        } else {
+          throw error;
+        }
+      })
+      .then(appInfo => {
+        if (appInfo.state === ApplicationInfo.applicationState.running || appInfo.state === ApplicationInfo.applicationState.stopped) {
+          return this._childProcessAdapter.exec(ApplicationInfoCommand.commands.getVersion()).then(version => {
+            appInfo.version = version.trim().match(ApplicationInfoCommand._regexps.version)[1];
+            return appInfo;
+          });
+        } else {
           return appInfo;
-        });
-      } else {
-        return appInfo;
-      }
-    });
+        }
+      });
   }
 }
 

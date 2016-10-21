@@ -23,10 +23,13 @@ class UpdateInfoCommand {
   }
 
   execute() {
-    return Promise.all([
+    const tasks = [
       this._childProcessAdapter.exec(UpdateInfoCommand.commands.getUpdateProcess()),
       this._childProcessAdapter.exec(UpdateInfoCommand.commands.getLastUpdateTime())
-    ]).then(results => results[0] === '' ? results[1].trim() : 'updating');
+    ];
+
+    return Promise.all(tasks)
+      .then(results => results[0] === '' ? results[1].trim() : 'updating');
   }
 }
 

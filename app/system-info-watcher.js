@@ -29,13 +29,15 @@ class SystemInfoWatcher extends EventEmitter {
     var previousState;
 
     function scan() {
-      this._systemInfoScanner.execute().then(currentState => {
-        if (JSON.stringify(previousState) !== JSON.stringify(currentState)) {
-          this.emit(SystemInfoWatcher.events.change, currentState);
-        }
+      this._systemInfoScanner.execute()
+        .then(currentState => {
+          if (JSON.stringify(previousState) !== JSON.stringify(currentState)) {
+            this.emit(SystemInfoWatcher.events.change, currentState);
+          }
 
-        previousState = currentState;
-      }).catch(error => console.error(error));
+          previousState = currentState;
+        })
+        .catch(error => console.error(error));
     }
 
     scan.call(this);

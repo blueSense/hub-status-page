@@ -34,18 +34,20 @@ class NetworkInfoCommand {
     const scanInterfaces = Object.keys(interfaces)
       .reduce((prev, current) => {
         const command = NetworkInfoCommand.commands.getInterfaceInfo(current);
-        return prev.then(result => this._childProcessAdapter.exec(command)
-          .then(info => {
-            result[current] = info;
-            return result;
-          })
-          .catch(error => {
-            if (error.message !== `Device "${current}" does not exist.`) {
-              throw error;
-            }
+        return prev.then(result => {
+          return this._childProcessAdapter.exec(command)
+            .then(info => {
+              result[current] = info;
+              return result;
+            })
+            .catch(error => {
+              if (error.message !== `Device "${current}" does not exist.`) {
+                throw error;
+              }
 
-            return result;
-          }));
+              return result;
+            });
+        });
       }, Promise.resolve({}));
 
     return scanInterfaces.then(results => {
