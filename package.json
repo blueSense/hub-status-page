@@ -1,6 +1,6 @@
 {
   "name": "bsn-hub-status-page",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": true,
   "bin": {
     "bsn-hub-status-page-daemon": "./bin/www"
