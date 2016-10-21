@@ -25,12 +25,16 @@ class SystemInfoScanner {
    * @returns {Promise<SystemInfo>}
    */
   execute() {
-    return Promise.all([
+    const tasks = [
       this._commands.hostnameCommand.execute(),
       this._commands.networkInfoCommand.execute(),
       this._commands.applicationInfoCommand.execute(),
       this._commands.updateInfoCommand.execute()
-    ]).then(results => new SystemInfo(results[0], results[1], results[2], results[3]));
+    ];
+
+    return Promise.all(tasks)
+      .then(results => new SystemInfo(results[0], results[1], results[2], results[3]))
+      .catch(error => console.error(`An error occurred while scanning the system: ${error}`));
   }
 }
 

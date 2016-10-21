@@ -25,7 +25,7 @@ describe('ApplicationInfoCommand', function() {
         this.childProcessAdapterMock.expects('exec')
           .once()
           .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
-          .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-installed', {encoding: 'utf8'})));
+          .returns(Promise.reject(new Error(fs.readFileSync('test/unit/fixtures/supernode-not-installed', {encoding: 'utf8'}))));
 
         return this.applicationInfoCommand.execute().should.be.fulfilled.then(info => {
           info.should.deep.equal(expectedInfo);
@@ -47,7 +47,7 @@ describe('ApplicationInfoCommand', function() {
           this.childProcessAdapterMock.expects('exec')
             .once()
             .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
-            .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running', {encoding: 'utf8'})));
+            .returns(Promise.reject(new Error(fs.readFileSync('test/unit/fixtures/supernode-not-running', {encoding: 'utf8'}))));
 
           this.childProcessAdapterMock.expects('exec')
             .once()
@@ -71,7 +71,7 @@ describe('ApplicationInfoCommand', function() {
           this.childProcessAdapterMock.expects('exec')
             .once()
             .withArgs(this.ApplicationInfoCommand.commands.getImageInfo())
-            .returns(Promise.reject(fs.readFileSync('test/unit/fixtures/supernode-not-running-never-ran', {encoding: 'utf8'})));
+            .returns(Promise.reject(new Error(fs.readFileSync('test/unit/fixtures/supernode-not-running-never-ran', {encoding: 'utf8'}))));
 
           this.childProcessAdapterMock.expects('exec')
             .once()
@@ -114,7 +114,7 @@ describe('ApplicationInfoCommand', function() {
 
     context('command throws an error other than expected one', function() {
       it('should propagate that error', function() {
-        var error = 'Some random error';
+        var error = new Error('Some random error');
 
         this.childProcessAdapterMock.expects('exec')
           .once()
@@ -122,7 +122,7 @@ describe('ApplicationInfoCommand', function() {
           .returns(Promise.reject(error));
 
         return this.applicationInfoCommand.execute().should.be.rejected.then(thrownError => {
-          thrownError.should.deep.equal(new Error(error));
+          thrownError.should.deep.equal(error);
           this.childProcessAdapterMock.verify();
         });
       });

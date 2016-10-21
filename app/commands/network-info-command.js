@@ -40,7 +40,7 @@ class NetworkInfoCommand {
             return result;
           })
           .catch(error => {
-            if (error !== `Device "${current}" does not exist.`) {
+            if (error.message !== `Device "${current}" does not exist.`) {
               throw error;
             }
 

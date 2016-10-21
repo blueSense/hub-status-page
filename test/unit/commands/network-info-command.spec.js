@@ -56,7 +56,7 @@ describe('NetworkInfoCommand', function() {
 
         this.childProcessAdapterMock.expects('exec')
           .withArgs(this.NetworkInfoCommand.commands.getInterfaceInfo('wlan0'))
-          .returns(Promise.reject('Device "wlan0" does not exist.'));
+          .returns(Promise.reject(new Error('Device "wlan0" does not exist.')));
 
         return this.networkInfoCommand.execute().should.be.fulfilled.then(networkInfo => {
           networkInfo.should.deep.equal(expectedNetworkInfo);

@@ -33,17 +33,17 @@ class ApplicationInfoCommand {
         info.match(ApplicationInfoCommand._regexps.since)[1],
         null,
         null);
-    }).catch(stdout => {
-      if (stdout.indexOf('Loaded: not-found') >= 0) {
+    }).catch(error => {
+      if (error.message.indexOf('Loaded: not-found') >= 0) {
         return new ApplicationInfo(ApplicationInfo.applicationState.notInstalled, null, null, null);
-      } else if (stdout.indexOf('Loaded: loaded') >= 0) {
+      } else if (error.message.indexOf('Loaded: loaded') >= 0) {
         return new ApplicationInfo(
           ApplicationInfo.applicationState.stopped,
           null,
-          stdout.match(ApplicationInfoCommand._regexps.since) ? stdout.match(ApplicationInfoCommand._regexps.since)[1] : null
+          error.message.match(ApplicationInfoCommand._regexps.since) ? error.message.match(ApplicationInfoCommand._regexps.since)[1] : null
         );
       } else {
-        throw new Error(stdout);
+        throw error;
       }
     }).then(appInfo => {
       if (appInfo.state === ApplicationInfo.applicationState.running || appInfo.state === ApplicationInfo.applicationState.stopped) {
