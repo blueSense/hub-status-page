@@ -33,8 +33,7 @@ class SystemInfoScanner {
     ];
 
     return Promise.all(tasks)
-      .then(results => new SystemInfo(results[0], results[1], results[2], results[3]))
-      .catch(error => console.error(`An error occurred while scanning the system: ${error}`));
+      .then(results => new SystemInfo(results[0], results[1], results[2], results[3]));
   }
 }
 

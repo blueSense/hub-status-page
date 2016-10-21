@@ -37,7 +37,7 @@ class SystemInfoWatcher extends EventEmitter {
 
           previousState = currentState;
         })
-        .catch(error => console.error(error));
+        .catch(error => console.error(`An error occurred while scanning the system: ${error.message}`));
     }
 
     scan.call(this);
