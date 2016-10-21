@@ -25,13 +25,8 @@ class NetworkInfoCommand {
     };
   }
 
-  execute() {
-    const interfaces = {
-      eth0: 'LAN',
-      wlan0: 'WiFi'
-    };
-
-    const scanInterfaces = Object.keys(interfaces)
+  _scanInterfaces(interfaces) {
+    return Object.keys(interfaces)
       .reduce((prev, current) => {
         const command = NetworkInfoCommand.commands.getInterfaceInfo(current);
         return prev.then(result => {
@@ -49,22 +44,32 @@ class NetworkInfoCommand {
             });
         });
       }, Promise.resolve({}));
+  }
 
-    return scanInterfaces.then(results => {
-      const interfaces = {};
+  _extractNetworkInfo(scanResults) {
+    const interfaces = {};
 
-      const lanIp = results.eth0.match(NetworkInfoCommand._regexps.ifconfigIp);
-      interfaces.lan = new Interface('LAN', lanIp ? lanIp[1] : null);
+    const lanIp = scanResults.eth0.match(NetworkInfoCommand._regexps.ifconfigIp);
+    interfaces.lan = new Interface('LAN', lanIp ? lanIp[1] : null);
 
-      if (results.wlan0) {
-        const wifiIp = results.wlan0.match(NetworkInfoCommand._regexps.ifconfigIp);
-        interfaces.wifi = new Interface('WiFi', wifiIp ? wifiIp[1] : null);
-      } else {
-        interfaces.wifi = new Interface('WiFi', null);
-      }
+    if (scanResults.wlan0) {
+      const wifiIp = scanResults.wlan0.match(NetworkInfoCommand._regexps.ifconfigIp);
+      interfaces.wifi = new Interface('WiFi', wifiIp ? wifiIp[1] : null);
+    } else {
+      interfaces.wifi = new Interface('WiFi', null);
+    }
 
-      return new NetworkInfo(interfaces);
-    });
+    return new NetworkInfo(interfaces);
+  }
+
+  execute() {
+    const interfaces = {
+      eth0: 'LAN',
+      wlan0: 'WiFi'
+    };
+
+    return this._scanInterfaces(interfaces)
+      .then(results => this._extractNetworkInfo(results));
   }
 }
 

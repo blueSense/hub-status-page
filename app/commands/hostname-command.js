@@ -18,7 +18,8 @@ class HostnameCommand {
   }
 
   execute() {
-    return this._childProcessAdapter.exec(HostnameCommand.commands.getHostname())
+    return this._childProcessAdapter
+      .exec(HostnameCommand.commands.getHostname())
       .then(hostname => hostname.trim());
   }
 }
