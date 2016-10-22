@@ -2,8 +2,6 @@ const gulp = require('gulp');
 const nodemon = require('gulp-nodemon');
 const livereload = require('gulp-livereload');
 const Cucumber = require('cucumber');
-const fs = require('fs');
-const execSync = require('child_process').execSync;
 
 gulp.task('develop', function() {
   livereload.listen();
@@ -30,13 +28,6 @@ gulp.task('acceptance-test', function(done) {
   }
 
   Cucumber.Cli(argv).run(succeeded => done(succeeded ? undefined : new Error('Cucumber tests failed!')));
-});
-
-gulp.task('tag', () => {
-  var version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
-
-  execSync(`git tag -a -m "Publish version: ${version}" v${version}`);
-  execSync(`git push --follow-tags`);
 });
 
 gulp.task('default', [
