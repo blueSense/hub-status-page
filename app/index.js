@@ -4,10 +4,10 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const path = require('path');
 
-const SystemInfoWatcher = require('./app/system-info-watcher');
+const SystemInfoWatcher = require('./system-info-watcher');
 const systemInfoWatcher = SystemInfoWatcher.create();
 
-app.use(express.static(path.join(__dirname, './public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 var systemInfo;
 
