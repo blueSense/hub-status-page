@@ -2,6 +2,7 @@
 
 const ChildProcessAdapter = require('../child-process-adapter');
 const ApplicationInfo = require('../models/application-info');
+const config = require('config');
 
 class ApplicationInfoCommand {
   constructor() {
@@ -14,15 +15,15 @@ class ApplicationInfoCommand {
 
   static get commands() {
     return {
-      getImageInfo: () => 'systemctl status bsn-supernode',
-      getVersion: () => 'pacman -Q bsn-supernode'
+      getImageInfo: () => `systemctl status ${config.get('application.serviceName')}`,
+      getVersion: () => `pacman -Q ${config.get('application.packageName')}`
     };
   }
 
   static get _regexps() {
     return {
       since: /since (.*?);/m,
-      version: /^bsn-supernode (.*\-\d)$/
+      version: new RegExp(`^${config.get('application.packageName')} (.*\\-\\d)$`)
     };
   }
 

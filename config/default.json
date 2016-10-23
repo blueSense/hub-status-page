@@ -1,3 +1,7 @@
 {
-  "port": "80"
+  "port": "80",
+  "application": {
+    "packageName": "bsn-supernode",
+    "serviceName": "bsn-supernode"
+  }
 }
