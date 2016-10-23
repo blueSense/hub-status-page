@@ -1,6 +1,6 @@
 {
   "name": "bsn-hub-status-page",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "dependencies": {
     "bower": {
       "version": "1.7.9",
