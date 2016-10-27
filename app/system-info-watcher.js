@@ -26,9 +26,9 @@ class SystemInfoWatcher extends EventEmitter {
   }
 
   startMonitoring() {
-    var previousState;
+    let previousState;
 
-    function scan() {
+    const scan = () => {
       this._systemInfoScanner.execute()
         .then(currentState => {
           if (JSON.stringify(previousState) !== JSON.stringify(currentState)) {
@@ -38,10 +38,10 @@ class SystemInfoWatcher extends EventEmitter {
           previousState = currentState;
         })
         .catch(error => console.error(`An error occurred while scanning the system: ${error.message}`));
-    }
+    };
 
-    scan.call(this);
-    this._currentScan = setInterval(() => scan.call(this), this.updateInterval);
+    scan();
+    this._currentScan = setInterval(() => scan(), this.updateInterval);
   }
 
   stopMonitoring() {
